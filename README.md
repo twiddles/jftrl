@@ -1,6 +1,6 @@
 Java-FTRL
 =======
-A Java implementation of the "Follow the (Proximally) Regularized Leader"-Algorithm.
+An optimized Java implementation of the "Follow the (Proximally) Regularized Leader"-Algorithm.
 
 ##### References
 
