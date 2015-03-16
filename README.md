@@ -2,7 +2,10 @@ Java-FTRL
 =======
 A Java implementation of the "Follow the (Proximally) Regularized Leader"-Algorithm.
 
+##### References
+
 - Original paper at: http://goo.gl/iqIaH0
+- Loosely based on the Python implementation of: https://github.com/jeongyoonlee/Kaggler
 
 ##### Installation (requires Maven)
 
