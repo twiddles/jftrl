@@ -1,4 +1,4 @@
-JFTRL
+Java-FTRL
 =======
 A Java implementation of the "Follow the (Proximally) Regularized Leader"-Algorithm.
 
