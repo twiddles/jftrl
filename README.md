@@ -6,6 +6,7 @@ A Java implementation of the "Follow the (Proximally) Regularized Leader"-Algori
 
 - Original paper at: http://goo.gl/iqIaH0
 - Loosely based on the Python implementation of: https://github.com/jeongyoonlee/Kaggler
+- Published under the MIT license (see LICENSE)
 
 ##### Installation (requires Maven)
 
