@@ -14,12 +14,12 @@ An optimized Java implementation of the "Follow the (Proximally) Regularized Lea
 - `cd jftrl`
 - `mvn clean install`
 
+##### Referenced as a Maven dependency
 ```
 <dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.12</version>
-    <scope>test</scope>
+    <groupId>org.ftrl</groupId>
+    <artifactId>jftrl</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
