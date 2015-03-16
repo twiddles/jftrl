@@ -5,10 +5,10 @@ A Java implementation of the "Follow the (Proximally) Regularized Leader"-Algori
 ##### References
 
 - Original paper at: http://goo.gl/iqIaH0
-- Loosely based on the Python implementation of: https://github.com/jeongyoonlee/Kaggler
-- Published under the MIT license (see LICENSE)
+- Loosely based on the Python implementation of: [jeongyoonlee/Kaggler](https://github.com/jeongyoonlee/Kaggler)
+- Published under the MIT license (see [LICENSE](https://github.com/twiddles/jftrl/blob/master/LICENSE=))
 
-##### Installation (requires Maven)
+##### Installation (requires [Maven](http://maven.apache.org/))
 
 - `git clone https://github.com/twiddles/jftrl.git`
 - `cd jftrl`
