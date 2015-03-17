@@ -1,21 +1,17 @@
 package org.jftrl;
 
 import static java.lang.Math.exp;
-import static java.lang.Math.log;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
+import static org.jftrl.Metrics.loss;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import org.apache.log4j.Logger;
 
 /**
  * "Follow the (Proximally) Regularized Leader"-Algorithm
@@ -24,11 +20,10 @@ import java.util.Objects;
  * @see http://www.eecs.tufts.edu/~dsculley/papers/ad-click-prediction.pdf
  */
 public class FTRL {
+    private static Logger LOG = Logger.getLogger(FTRL.class);
+
     private static final String US = "_";
-
     private static final String BLANKS = "\\s+";
-
-    public static double ε = 1e-15;
 
     public int numFeatures = (int) Math.pow(2, 16);
     public double α = 0.1; // learning rate
@@ -38,12 +33,12 @@ public class FTRL {
     private double[] η;
 
     public int interactions = 1;
-
     public double λ1 = 1.0; // L1-Regularization
     public double λ2 = 1.0; // L2-Regularization
     public double β = 1.0;
+    public boolean verbose = false;
 
-    public long numRounds = 0;
+    public long numSamplesSeen = 0;
 
     public double fit(String[][] lines, Label[] y) {
         double loss = 0.0;
@@ -66,7 +61,7 @@ public class FTRL {
         double yPred = predictProba(features);
         double loss = loss(yPred, yTrue);
         update(features, yPred, yTrue);
-        numRounds++;
+        numSamplesSeen++;
 
         return loss;
     }
@@ -224,38 +219,6 @@ public class FTRL {
         return 1.0 / (1 + exp(-max(min(x, 20), -20)));
     }
 
-    /**
-     * LogLoss function
-     */
-    public static double loss(double yPred, Label yTrue) {
-        double p = max(min(yPred, 1 - ε), ε);
-        return -log(yTrue == Label.TRUE ? p : (1 - p));
-    }
-
-    public static BufferedReader reader(String fileName) throws FileNotFoundException {
-        return new BufferedReader(new FileReader(fileName));
-    }
-
-    public static PrintWriter writer(String filename) throws IOException {
-        return new PrintWriter(new BufferedWriter(new FileWriter(new File(filename))));
-    }
-
-    public static String[] slice(String[] values, int start) {
-        String[] result = new String[values.length - start];
-        System.arraycopy(values, start, result, 0, values.length - start);
-        return result;
-    }
-
-    public static double logloss(double yTrue, double yPred) {
-        double p = Math.max(Math.min(yPred, 1. - ε), ε);
-        if (yTrue > 0.5) {
-            return -log(p);
-        } else {
-            return -log(1.0 - p);
-        }
-
-    }
-
     public static double accuracy(double[] yTrue, double[] yPred) {
         int correct = 0;
         for (int i = 0; i < yTrue.length; i++) {
@@ -264,5 +227,54 @@ public class FTRL {
             }
         }
         return 1.0 * correct / yTrue.length;
+    }
+
+    public static List<Double> crossValidate(FTRL params, String[][] X, Label[] y, int numFolds, int numPasses) {
+        List<Double> scores = new ArrayList<>();
+        for (int fold = 1; fold <= numFolds; fold++) {
+            FTRL clf = params.clone();
+            for (int pass = 0; pass < numPasses; pass++) {
+                int numCorrect = 0;
+                int numTotal = 0;
+
+                boolean isLastPass = (pass == numPasses - 1);
+
+                for (int i = 0; i < X.length; i++) {
+                    if (i % fold == 0) {
+                        if (isLastPass) {
+                            numTotal++;
+                            Label yPred = clf.predict(X[i]);
+                            if (yPred == y[i]) {
+                                numCorrect++;
+                            }
+                        }
+                    } else {
+                        clf.fit(X[i], y[i]);
+                    }
+                }
+                if (isLastPass) {
+                    double score = 1.0 * numCorrect / numTotal;
+                    LOG.info(String.format("Accuracy on fold #%s: %.5f", fold, score));
+                    scores.add(score);
+                }
+            }
+        }
+
+        return scores;
+    }
+
+    public FTRL clone() {
+        FTRL clf = new FTRL();
+        clf.numFeatures = numFeatures;
+        clf.α = α;
+        clf.w = w;
+        clf.z = z;
+        clf.η = η;
+        clf.interactions = interactions;
+        clf.λ1 = λ1; // L1-Regularization
+        clf.λ2 = λ2; // L2-Regularization
+        clf.β = β;
+        clf.verbose = verbose;
+        return clf;
     }
 }

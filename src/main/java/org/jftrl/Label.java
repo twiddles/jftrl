@@ -16,10 +16,10 @@ public enum Label {
     }
 
     public static Label fromString(String label) {
-        if ("0".equals(label) || label.toLowerCase().equals("true")) {
+        if ("1".equals(label) || label.toLowerCase().equals("true")) {
             return TRUE;
         }
-        if ("1".equals(label) || label.toLowerCase().equals("false")) {
+        if ("0".equals(label) || label.toLowerCase().equals("false")) {
             return FALSE;
         }
 

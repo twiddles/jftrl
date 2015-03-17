@@ -17,7 +17,9 @@ public class FTRLTest {
     public void test_XOR() throws Exception {
         FTRL clf = new FTRL();
         clf.interactions = 2;
-        for (int i = 0; i < 100; i++) {
+        clf.λ1 = 0.0;
+
+        for (int i = 0; i < 5; i++) {
             clf.fit("true true", FALSE);
             clf.fit("true false", TRUE);
             clf.fit("false true", TRUE);
@@ -30,13 +32,16 @@ public class FTRLTest {
         assertEquals(FALSE, clf.predict("false false"));
     }
 
-    public void test_Holdout() throws Exception {
+    @Test
+    public void test_majority() throws Exception {
         FTRL clf = new FTRL();
+        clf.λ1 = 0.1;
+        clf.α = 0.1;
 
         clf.fit("true true", FALSE);
         clf.fit("true true", TRUE);
         clf.fit("true true", TRUE);
-        clf.fit("false false", FALSE);
+        assertEquals(Label.TRUE, clf.predict("true true"));
     }
 
     @Test
