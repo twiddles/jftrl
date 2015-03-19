@@ -10,15 +10,10 @@ package org.jftrl;
 import static java.lang.Math.log;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static java.lang.Math.round;
 
 import java.util.List;
 
-/**
- * 
- * 
- * @version $Id: $
- * @since 10.7.0
- */
 public class Metrics {
 
     public static double ε = 1e-15;
@@ -55,6 +50,16 @@ public class Metrics {
             sum += xs[i];
         }
         return sum / xs.length;
+    }
+
+    public static double accuracy(double[] yTrue, double[] yPred) {
+        int correct = 0;
+        for (int i = 0; i < yTrue.length; i++) {
+            if (round(yTrue[i]) == round(yPred[i])) {
+                correct++;
+            }
+        }
+        return 1.0 * correct / yTrue.length;
     }
 
 }

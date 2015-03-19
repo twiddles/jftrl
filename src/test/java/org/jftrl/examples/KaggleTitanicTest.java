@@ -4,6 +4,7 @@ import static java.lang.String.format;
 import static org.jftrl.Data.reader;
 import static org.jftrl.Data.split;
 import static org.jftrl.Data.sublist;
+import static org.jftrl.Data.toArray;
 import static org.jftrl.Data.writer;
 import static org.jftrl.Label.fromString;
 import static org.jftrl.Metrics.mean;
@@ -21,10 +22,17 @@ import org.jftrl.FTRL;
 import org.jftrl.Label;
 import org.junit.Test;
 
-public class KaggleTitanic {
+/**
+ * Sample code for the "Titanic: Machine Learning from disaster"-competition hosted at Kaggle.
+ * 
+ * Includes cross-validation, fitting and the creation of the submission file.
+ * 
+ * http://www.kaggle.com/c/titanic-gettingStarted
+ */
+public class KaggleTitanicTest {
 
-    private static Logger LOG = Logger.getLogger(KaggleTitanic.class);
-    private static final int NUM_CV_FOLDS = 10;
+    private static Logger LOG = Logger.getLogger(KaggleTitanicTest.class);
+    private static final int NUM_CV_FOLDS = 20;
     private static final int NUM_PASSES = 10;
 
     @Test
@@ -62,15 +70,14 @@ public class KaggleTitanic {
         int numFolds = NUM_CV_FOLDS;
         List<Double> scores = FTRL.crossValidate(clf, toArray(trainingData), y.toArray(new Label[0]), numFolds, NUM_PASSES);
         double meanScore = mean(scores);
-        LOG.info(format("Cross Validation with %s-fold CV results in mean accuracy of %s", numFolds, meanScore));
+        LOG.info(format("Cross Validation with %s-fold CV results in mean accuracy of %s.", numFolds, meanScore));
 
-        assertEquals("FTRL should have a CV-Score of about 0.76-0.84", 0.8, meanScore, 0.04);
+        assertEquals("FTRL should have a CV-Score of about 0.76-0.84", 0.80, meanScore, 0.04);
     }
 
     private void fit(FTRL clf) throws FileNotFoundException, IOException {
+        LOG.info("Fitting in " + NUM_PASSES + " passes.");
         for (int pass = 0; pass < NUM_PASSES; pass++) {
-            LOG.info("Current pass over data: " + (pass + 1));
-
             BufferedReader train = reader("data/titanic/train.csv");
             // skip header info
             train.readLine();
@@ -86,6 +93,11 @@ public class KaggleTitanic {
         }
     }
 
+    /**
+     * Writes the submission file according to the specified format by Kaggle.
+     * 
+     * @param clf The classifier used to perform the predictions.
+     */
     private void predict(FTRL clf) throws IOException, FileNotFoundException {
         // Write the submission file
         PrintWriter submission = writer("data/titanic/submission.csv");
@@ -106,6 +118,9 @@ public class KaggleTitanic {
         submission.close();
     }
 
+    /**
+     * Some minimal/lazy feature engineering (e.g. split the cabin id into two additional columns "B45" -> "B", "45".
+     */
     private static List<String> toFeatures(List<String> x) {
         x = new ArrayList<>(x);
         String cabin = x.get(9);
@@ -117,14 +132,5 @@ public class KaggleTitanic {
             x.add("");
         }
         return x;
-    }
-
-    private static String[][] toArray(List<List<String>> data) {
-        String[][] result = new String[data.size()][];
-        int i = 0;
-        for (List<String> row : data) {
-            result[i++] = (row.toArray(new String[0]));
-        }
-        return result;
     }
 }

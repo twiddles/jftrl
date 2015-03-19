@@ -3,8 +3,8 @@ package org.jftrl;
 import static java.lang.Math.exp;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
+import static org.jftrl.Data.shuffle;
 import static org.jftrl.Metrics.loss;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class FTRL {
     private double[] z;
     private double[] η;
 
-    public int interactions = 1;
+    public int interactions = 1; // degree of automatically generated feature interactions
     public double λ1 = 1.0; // L1-Regularization
     public double λ2 = 1.0; // L2-Regularization
     public double β = 1.0;
@@ -43,27 +43,27 @@ public class FTRL {
     public double fit(String[][] lines, Label[] y) {
         double loss = 0.0;
         for (int i = 0; i < lines.length; i++) {
-            loss += fit(lines[i], y[i]);
+            int[] features = features(lines[i]);
+            double yPred = predictProba(features);
+            loss += loss(yPred, y[i]);
+            fit(lines[i], y[i]);
         }
         return loss / lines.length;
     }
 
-    public double fit(String line, Label yTrue) {
-        return fit(line.split(BLANKS), yTrue);
+    public void fit(String line, Label yTrue) {
+        fit(line.split(BLANKS), yTrue);
     }
 
-    public double fit(String[] line, Label yTrue) {
+    public void fit(String[] line, Label yTrue) {
         if (yTrue == null) {
-            throw new RuntimeException("Label must not be <null> when fitting.");
+            throw new IllegalArgumentException("Label must not be <null> when fitting.");
         }
 
         int[] features = features(line);
         double yPred = predictProba(features);
-        double loss = loss(yPred, yTrue);
         update(features, yPred, yTrue);
         numSamplesSeen++;
-
-        return loss;
     }
 
     public Label predict(String data) {
@@ -219,17 +219,8 @@ public class FTRL {
         return 1.0 / (1 + exp(-max(min(x, 20), -20)));
     }
 
-    public static double accuracy(double[] yTrue, double[] yPred) {
-        int correct = 0;
-        for (int i = 0; i < yTrue.length; i++) {
-            if (round(yTrue[i]) == round(yPred[i])) {
-                correct++;
-            }
-        }
-        return 1.0 * correct / yTrue.length;
-    }
-
     public static List<Double> crossValidate(FTRL params, String[][] X, Label[] y, int numFolds, int numPasses) {
+        shuffle(X, y);
         List<Double> scores = new ArrayList<>();
         for (int fold = 1; fold <= numFolds; fold++) {
             FTRL clf = params.clone();
@@ -240,7 +231,7 @@ public class FTRL {
                 boolean isLastPass = (pass == numPasses - 1);
 
                 for (int i = 0; i < X.length; i++) {
-                    if (i % fold == 0) {
+                    if (i % (fold + 1) == 0) {
                         if (isLastPass) {
                             numTotal++;
                             Label yPred = clf.predict(X[i]);
