@@ -24,6 +24,6 @@ An optimized Java implementation of the "Follow the (Proximally) Regularized Lea
 ```
 
 ##### Example Code
-- Kaggle Titanic: https://github.com/twiddles/jftrl/blob/master/src/test/java/org/jftrl/examples/KaggleTitanic.java
+- Kaggle Titanic: https://github.com/twiddles/jftrl/blob/master/src/test/java/org/jftrl/KaggleTitanicTest.java
 
 

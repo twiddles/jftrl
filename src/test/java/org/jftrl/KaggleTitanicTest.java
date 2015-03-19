@@ -1,4 +1,4 @@
-package org.jftrl.examples;
+package org.jftrl;
 
 import static java.lang.String.format;
 import static org.jftrl.Data.reader;
