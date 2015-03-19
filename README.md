@@ -24,6 +24,21 @@ An optimized Java implementation of the "Follow the (Proximally) Regularized Lea
 ```
 
 ##### Example Code
-- Kaggle Titanic: https://github.com/twiddles/jftrl/blob/master/src/test/java/org/jftrl/examples/KaggleTitanic.java
+- Learning to solve XOR:
+  ```
+FTRL clf = new FTRL();
+clf.interactions = 2;
+clf.λ1 = 0.0;
+
+clf.fit("true true", FALSE);
+clf.fit("true false", TRUE);
+clf.fit("false true", TRUE);
+clf.fit("false false", FALSE);
+
+clf.predict("true true"); // FALSE
+clf.predict("false true"); // TRUE
+```
+
+- [Kaggle Titanic](https://github.com/twiddles/jftrl/blob/master/src/test/java/org/jftrl/examples/KaggleTitanic.java)
 
 
