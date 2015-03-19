@@ -27,8 +27,8 @@ An optimized Java implementation of the "Follow the (Proximally) Regularized Lea
 - XOR:
   ```
 FTRL clf = new FTRL();
-clf.interactions = 2;
-clf.λ1 = 0.0;
+clf.interactions = 2; // automatically consider feature interactions up to  a degree of 2
+clf.λ1 = 0.0; // disable regularization for the sake of simplicity
 
 clf.fit("true true", FALSE);
 clf.fit("true false", TRUE);
