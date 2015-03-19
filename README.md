@@ -24,7 +24,7 @@ An optimized Java implementation of the "Follow the (Proximally) Regularized Lea
 ```
 
 ##### Example Code
-- Learning to solve XOR:
+- XOR:
   ```
 FTRL clf = new FTRL();
 clf.interactions = 2;
