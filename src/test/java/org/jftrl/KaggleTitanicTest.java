@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jftrl.FTRL;
-import org.jftrl.Label;
 import org.junit.Test;
 
 /**
@@ -39,7 +37,7 @@ public class KaggleTitanicTest {
     public void testPipeline() throws IOException {
         // Create a new instance of FTRL and set some parameters
         FTRL clf = new FTRL();
-        clf.numFeatures = (int) Math.pow(2, 24);
+        clf.numFeatures = (int) Math.pow(2, 18);
         clf.interactions = 1;
         clf.λ1 = 0.01;
         clf.λ2 = 0.01;
