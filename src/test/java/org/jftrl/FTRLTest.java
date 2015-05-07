@@ -109,7 +109,7 @@ public class FTRLTest {
         }
     }
 
-    @Test(timeout = 4000)
+    @Test(timeout = 2000)
     public void test_fit_speed() throws Exception {
         FTRL clf = new FTRL();
         clf.interactions = 3;
@@ -117,7 +117,7 @@ public class FTRLTest {
 
         for (int k = 0; k < 10; k++) {
             long start = System.currentTimeMillis();
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 10000; i++) {
                 clf.fit(features, Label.fromBoolean(i % 2 == 0));
             }
             LOG.info("Hashing done in: " + (System.currentTimeMillis() - start) + "ms");
