@@ -108,4 +108,19 @@ public class FTRLTest {
             LOG.info("Hashing done in: " + (System.currentTimeMillis() - start) + "ms");
         }
     }
+
+    @Test(timeout = 4000)
+    public void test_fit_speed() throws Exception {
+        FTRL clf = new FTRL();
+        clf.interactions = 3;
+        int[] features = clf.features("foo bar baz zap dap hap map cap lab froz spoz sploz");
+
+        for (int k = 0; k < 10; k++) {
+            long start = System.currentTimeMillis();
+            for (int i = 0; i < 100000; i++) {
+                clf.fit(features, Label.fromBoolean(i % 2 == 0));
+            }
+            LOG.info("Hashing done in: " + (System.currentTimeMillis() - start) + "ms");
+        }
+    }
 }

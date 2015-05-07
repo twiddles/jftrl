@@ -61,6 +61,10 @@ public class FTRL {
         }
 
         int[] features = features(line);
+        fit(features, yTrue);
+    }
+
+    public void fit(int[] features, Label yTrue) {
         double yPred = predictProba(features);
         update(features, yPred, yTrue);
         numSamplesSeen++;
