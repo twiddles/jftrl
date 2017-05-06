@@ -24,8 +24,9 @@ An optimized Java implementation of the "Follow the (Proximally) Regularized Lea
 ```
 
 ##### Example Code
-- XOR:
-  ```
+### XOR
+
+```
 FTRL clf = new FTRL();
 clf.interactions = 2; // automatically consider feature interactions up to  a degree of 2
 clf.λ1 = 0.0; // disable regularization for the sake of simplicity
@@ -39,6 +40,7 @@ clf.predict("true true"); // Label.FALSE
 clf.predict("false true"); // Label.TRUE
 ```
 
-- [Kaggle Titanic](https://github.com/twiddles/jftrl/blob/master/src/test/java/org/jftrl/KaggleTitanicTest.java)
+### Kaggle Titanic
+See example code [here](https://github.com/twiddles/jftrl/blob/master/src/test/java/org/jftrl/KaggleTitanicTest.java)
 
 
